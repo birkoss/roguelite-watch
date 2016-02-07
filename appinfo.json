@@ -1,0 +1,57 @@
+{
+  "uuid": "6c6822e1-7899-4ef9-be28-80a345af3fb5",
+  "shortName": "RogueLite",
+  "longName": "RogueLite",
+  "companyName": "birkoss.com",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt", "chalk"],
+  "enableMultiJS": true,
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": [
+      {
+        "type": "bitmap",
+        "name": "IMAGE_WALL",
+        "file": "dungeon_background.png"
+      },
+      {
+        "type": "bitmap",
+        "name": "IMAGE_PLAYER",
+        "file": "player.png"
+      },
+      {
+        "type": "bitmap",
+        "name": "IMAGE_GOBLIN",
+        "file": "goblin.png"
+      },
+      {
+        "type": "bitmap",
+        "name": "IMAGE_HEALTH",
+        "file": "health.png"
+      },
+      {
+        "type": "bitmap",
+        "name": "BACKGROUND_TIME",
+        "file": "time_background.png"
+      },
+      {
+        "type": "font",
+        "name": "FONT_FIVEPFIVE_20",
+        "file": "5P5.ttf",
+        "compatibility":"2.7"
+      },
+      {
+        "type": "font",
+        "name": "FONT_PIXELMIX_20",
+        "file": "pixelmix.ttf",
+        "compatibility":"2.7"
+      }
+    ]
+  }
+}
