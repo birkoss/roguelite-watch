@@ -11,6 +11,7 @@ static GBitmap *bitmapPlayer;
 static GBitmap *bitmapGoblin;
 static GBitmap *bitmapHealth;
 static GBitmap *bitmapBackgroundTime;
+static GBitmap *bitmapBattery;
 
 static GFont fontHealth;
 static GFont fontTime;
@@ -51,6 +52,10 @@ static void layer_update_proc(Layer *layer, GContext *ctx) {
 
   graphics_draw_text(ctx, "Gold: 135", fontHealth, GRect(6, 13, 144, 10), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
 
+  // Show the battery
+  graphics_draw_bitmap_in_rect(ctx, bitmapBattery, GRect(120, 6, 18, 10));
+  graphics_context_set_fill_color(ctx, GColorGreen);
+  graphics_fill_rect(ctx, GRect(123, 9, 10, 4), 0, GCornerNone);
 }
 
 static void window_load(Window *window) {
@@ -59,6 +64,7 @@ static void window_load(Window *window) {
   bitmapGoblin = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_GOBLIN);
   bitmapHealth = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_HEALTH);
   bitmapBackgroundTime = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND_TIME);
+  bitmapBattery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY);
 
   fontHealth = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FIVEPFIVE_20));
   fontTime = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FIVEPFIVE_48));
@@ -88,6 +94,7 @@ static void window_unload(Window *window) {
   gbitmap_destroy(bitmapGoblin);
   gbitmap_destroy(bitmapHealth);
   gbitmap_destroy(bitmapBackgroundTime);
+  gbitmap_destroy(bitmapBattery);
 
   text_layer_destroy(layerTime);
   fonts_unload_custom_font(fontTime);
