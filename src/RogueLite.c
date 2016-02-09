@@ -44,8 +44,13 @@ static void layer_update_proc(Layer *layer, GContext *ctx) {
   graphics_draw_text(ctx, "8", fontHealth, GRect(30, 86, 20, 20), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
   graphics_draw_text(ctx, "5", fontHealth, GRect(98, 86, 20, 20), GTextOverflowModeWordWrap, GTextAlignmentRight, NULL);
 
-  graphics_fill_rect(ctx, GRect(0, 54, 144, 34), 0, GCornerNone);
-  graphics_draw_bitmap_in_rect(ctx, bitmapBackgroundTime, GRect(0, 54, 144, 34));
+  graphics_draw_bitmap_in_rect(ctx, bitmapBackgroundTime, GRect(0, 40, 144, 50));
+
+  graphics_fill_rect(ctx, GRect(0, 0, 144, 40), 0, GCornerNone);
+  graphics_draw_text(ctx, "Knight", fontHealth, GRect(6, -4, 144, 10), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
+
+  graphics_draw_text(ctx, "Gold: 135", fontHealth, GRect(6, 13, 144, 10), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
+
 }
 
 static void window_load(Window *window) {
@@ -56,12 +61,12 @@ static void window_load(Window *window) {
   bitmapBackgroundTime = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND_TIME);
 
   fontHealth = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FIVEPFIVE_20));
-  fontTime = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PIXELMIX_20));
+  fontTime = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FIVEPFIVE_48));
 
   Layer *layerWindow = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(layerWindow);
 
-  layerTime = text_layer_create( GRect(0, PBL_IF_ROUND_ELSE(60,60), bounds.size.w, 50));
+  layerTime = text_layer_create( GRect(0, PBL_IF_ROUND_ELSE(28,28), bounds.size.w, 50));
   text_layer_set_background_color(layerTime, GColorClear);
   text_layer_set_text_color(layerTime, GColorWhite);
   text_layer_set_text(layerTime, "00:00");

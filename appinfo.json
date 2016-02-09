@@ -37,6 +37,11 @@
       },
       {
         "type": "bitmap",
+        "name": "IMAGE_BATTERY",
+        "file": "battery.png"
+      },
+      {
+        "type": "bitmap",
         "name": "BACKGROUND_TIME",
         "file": "time_background.png"
       },
@@ -48,8 +53,8 @@
       },
       {
         "type": "font",
-        "name": "FONT_PIXELMIX_20",
-        "file": "pixelmix.ttf",
+        "name": "FONT_FIVEPFIVE_48",
+        "file": "5P5.ttf",
         "compatibility":"2.7"
       }
     ]
