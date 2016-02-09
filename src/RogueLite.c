@@ -3,6 +3,8 @@
 
 #include <pebble.h>
 
+#include "Character.h"
+
 static Window *window;
 static Layer *layerBackground;
 
@@ -17,6 +19,9 @@ static GFont fontHealth;
 static GFont fontTime;
 
 static TextLayer *layerTime;
+
+static Character *player;
+static Character *enemy;
 
 static void update_time() {
   time_t temp = time(NULL);
@@ -36,8 +41,11 @@ static void layer_update_proc(Layer *layer, GContext *ctx) {
   graphics_draw_bitmap_in_rect(ctx, bitmapWall, GRect(PBL_IF_ROUND_ELSE(0, -((PBL_ROUND_WIDTH-PBL_TIME_WIDTH)/2)), 88, PBL_ROUND_WIDTH, 80));
 
   graphics_context_set_compositing_mode(ctx, GCompOpSet);
-  graphics_draw_bitmap_in_rect(ctx, bitmapPlayer, GRect(PBL_IF_ROUND_ELSE(34,16), 120, 45, 48));
-  graphics_draw_bitmap_in_rect(ctx, bitmapGoblin, GRect(PBL_IF_ROUND_ELSE(88,88), 123, 48, 45));
+  // graphics_draw_bitmap_in_rect(ctx, bitmapPlayer, GRect(PBL_IF_ROUND_ELSE(34,16), 120, 45, 48));
+  // graphics_draw_bitmap_in_rect(ctx, bitmapGoblin, GRect(PBL_IF_ROUND_ELSE(88,88), 123, 48, 45));
+
+  character_render(player, ctx);
+  character_render(enemy, ctx);
 
   graphics_draw_bitmap_in_rect(ctx, bitmapHealth, GRect(PBL_IF_ROUND_ELSE(8,8), 96, 13, 11));
   graphics_draw_bitmap_in_rect(ctx, bitmapHealth, GRect(PBL_IF_ROUND_ELSE(123,123), 96, 13, 11));
@@ -84,6 +92,9 @@ static void window_load(Window *window) {
   layer_add_child(layerWindow, layerBackground);
 
   layer_add_child(layerWindow, text_layer_get_layer(layerTime));
+
+  player = character_create(bitmapPlayer, GPoint(PBL_IF_ROUND_ELSE(34,16), 120));
+  enemy = character_create(bitmapGoblin, GPoint(PBL_IF_ROUND_ELSE(88,88), 123));
 }
 
 static void window_unload(Window *window) {
@@ -100,6 +111,9 @@ static void window_unload(Window *window) {
   fonts_unload_custom_font(fontTime);
 
   fonts_unload_custom_font(fontHealth);
+
+  character_destroy(player);
+  character_destroy(enemy);
 }
 
 static void init(void) {
