@@ -41,17 +41,11 @@ static void layer_update_proc(Layer *layer, GContext *ctx) {
   graphics_draw_bitmap_in_rect(ctx, bitmapWall, GRect(PBL_IF_ROUND_ELSE(0, -((PBL_ROUND_WIDTH-PBL_TIME_WIDTH)/2)), 88, PBL_ROUND_WIDTH, 80));
 
   graphics_context_set_compositing_mode(ctx, GCompOpSet);
-  // graphics_draw_bitmap_in_rect(ctx, bitmapPlayer, GRect(PBL_IF_ROUND_ELSE(34,16), 120, 45, 48));
-  // graphics_draw_bitmap_in_rect(ctx, bitmapGoblin, GRect(PBL_IF_ROUND_ELSE(88,88), 123, 48, 45));
-
   character_render(player, ctx);
+  character_status(player, ctx, fontHealth, bitmapHealth, GTextAlignmentLeft);
+
   character_render(enemy, ctx);
-
-  graphics_draw_bitmap_in_rect(ctx, bitmapHealth, GRect(PBL_IF_ROUND_ELSE(8,8), 96, 13, 11));
-  graphics_draw_bitmap_in_rect(ctx, bitmapHealth, GRect(PBL_IF_ROUND_ELSE(123,123), 96, 13, 11));
-
-  graphics_draw_text(ctx, "8", fontHealth, GRect(30, 86, 20, 20), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
-  graphics_draw_text(ctx, "5", fontHealth, GRect(98, 86, 20, 20), GTextOverflowModeWordWrap, GTextAlignmentRight, NULL);
+  character_status(enemy, ctx, fontHealth, bitmapHealth, GTextAlignmentRight);
 
   graphics_draw_bitmap_in_rect(ctx, bitmapBackgroundTime, GRect(0, 40, 144, 50));
 
