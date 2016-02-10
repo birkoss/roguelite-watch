@@ -38,23 +38,29 @@ static void tick_handler(struct tm *tick_time, TimeUnits unit_changed) {
 }
 
 static void layer_update_proc(Layer *layer, GContext *ctx) {
+  GRect bounds = layer_get_bounds(layer);
+
   graphics_draw_bitmap_in_rect(ctx, bitmapWall, GRect(PBL_IF_ROUND_ELSE(0, -((PBL_ROUND_WIDTH-PBL_TIME_WIDTH)/2)), 88, PBL_ROUND_WIDTH, 80));
 
+  // Player and enemy
   graphics_context_set_compositing_mode(ctx, GCompOpSet);
   character_render(player, ctx);
-  character_status(player, ctx, fontHealth, bitmapHealth, GTextAlignmentLeft);
+  character_status(player, ctx, fontHealth, bitmapHealth, (enemy == NULL ? GTextAlignmentCenter : GTextAlignmentLeft));
 
-  character_render(enemy, ctx);
-  character_status(enemy, ctx, fontHealth, bitmapHealth, GTextAlignmentRight);
+  if( enemy != NULL ) {
+    character_render(enemy, ctx);
+    character_status(enemy, ctx, fontHealth, bitmapHealth, GTextAlignmentRight);
+  }
 
+  // Time Background
   graphics_draw_bitmap_in_rect(ctx, bitmapBackgroundTime, GRect(0, 40, 144, 50));
 
+  // Top Bar
   graphics_fill_rect(ctx, GRect(0, 0, 144, 40), 0, GCornerNone);
   graphics_draw_text(ctx, "Knight", fontHealth, GRect(6, -4, 144, 10), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
-
   graphics_draw_text(ctx, "Gold: 135", fontHealth, GRect(6, 13, 144, 10), GTextOverflowModeWordWrap, GTextAlignmentLeft, NULL);
 
-  // Show the battery
+  // Battery
   graphics_draw_bitmap_in_rect(ctx, bitmapBattery, GRect(120, 6, 18, 10));
   graphics_context_set_fill_color(ctx, GColorGreen);
   graphics_fill_rect(ctx, GRect(123, 9, 10, 4), 0, GCornerNone);
@@ -87,8 +93,10 @@ static void window_load(Window *window) {
 
   layer_add_child(layerWindow, text_layer_get_layer(layerTime));
 
-  player = character_create(bitmapPlayer, GPoint(PBL_IF_ROUND_ELSE(34,16), 120));
-  enemy = character_create(bitmapGoblin, GPoint(PBL_IF_ROUND_ELSE(88,88), 123));
+  player = character_create(bitmapGoblin, GPoint(PBL_IF_ROUND_ELSE(34,16), 120));
+  character_set_position(player, bounds, GTextAlignmentLeft);
+  // player = character_create(bitmapPlayer);
+  // enemy = character_create(bitmapGoblin, GPoint(PBL_IF_ROUND_ELSE(88,88), 123));
 }
 
 static void window_unload(Window *window) {
