@@ -13,10 +13,10 @@ typedef struct {
   CharacterStatus status;
 } Character;
 
-Character* character_create(GBitmap *, GPoint);
+Character* character_create(GBitmap *);
 void character_destroy(Character *);
 
 void character_set_position(Character *, GRect, GTextAlignment);
 
 void character_render(Character *, GContext *);
-void character_status(Character *, GContext *, GFont, GBitmap *, GTextAlignment);
+void character_status(Character *, GContext *, GFont, GBitmap *);

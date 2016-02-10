@@ -32,6 +32,11 @@
       },
       {
         "type": "bitmap",
+        "name": "IMAGE_BLOOD",
+        "file": "blood.png"
+      },
+      {
+        "type": "bitmap",
         "name": "IMAGE_HEALTH",
         "file": "health.png"
       },

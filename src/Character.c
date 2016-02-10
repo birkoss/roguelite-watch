@@ -1,9 +1,8 @@
 #include "Character.h"
 
-Character* character_create(GBitmap *bitmap, GPoint position) {
+Character* character_create(GBitmap *bitmap) {
   Character *c = malloc(sizeof(Character));
   c->bitmap = bitmap;
-  c->position = position;
   c->health = 15;
   return c;
 }
@@ -51,21 +50,8 @@ void character_set_position(Character *c, GRect bounds, GTextAlignment alignment
   // Set the status position
 }
 
-void character_status(Character *c, GContext *ctx, GFont font, GBitmap *bitmap, GTextAlignment alignment) {
-  // GPoint positionBitmap = GPoint(50, 96);
+void character_status(Character *c, GContext *ctx, GFont font, GBitmap *bitmap) {
   GSize sizeBitmap = gbitmap_get_bounds(bitmap).size;
-  // GPoint positionText = GPoint(positionBitmap.x, positionBitmap.y-10);
-  //
-  // if( alignment == GTextAlignmentLeft ) {
-  //   positionBitmap.x = PBL_IF_ROUND_ELSE(8,8);
-  //   positionText.x = positionBitmap.x + sizeBitmap.w + 8;
-  // } else if( alignment == GTextAlignmentRight ) {
-  //   positionBitmap.x = PBL_IF_ROUND_ELSE(123,123);
-  //   positionText.x = positionBitmap.x - sizeBitmap.w - 8 - 5;
-  // } else if ( alignment == GTextAlignmentCenter ) {
-  //   alignment = GTextAlignmentLeft;
-  //   positionText.x = positionBitmap.x + sizeBitmap.w + 8;
-  // }
 
   graphics_draw_bitmap_in_rect(ctx, bitmap, GRect(c->status.positionBitmap.x, c->status.positionBitmap.y, sizeBitmap.w, sizeBitmap.h));
 

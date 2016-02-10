@@ -1,6 +1,3 @@
-#define PBL_ROUND_WIDTH 180
-#define PBL_TIME_WIDTH 144
-
 #include <pebble.h>
 
 #include "Character.h"
@@ -14,6 +11,7 @@ static GBitmap *bitmapGoblin;
 static GBitmap *bitmapHealth;
 static GBitmap *bitmapBackgroundTime;
 static GBitmap *bitmapBattery;
+static GBitmap *bitmapBlood;
 
 static GFont fontHealth;
 static GFont fontTime;
@@ -22,6 +20,10 @@ static TextLayer *layerTime;
 
 static Character *player;
 static Character *enemy;
+
+static void update_game() {
+
+}
 
 static void update_time() {
   time_t temp = time(NULL);
@@ -35,21 +37,24 @@ static void update_time() {
 
 static void tick_handler(struct tm *tick_time, TimeUnits unit_changed) {
   update_time();
+  update_game();
 }
 
 static void layer_update_proc(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
 
-  graphics_draw_bitmap_in_rect(ctx, bitmapWall, GRect(PBL_IF_ROUND_ELSE(0, -((PBL_ROUND_WIDTH-PBL_TIME_WIDTH)/2)), 88, PBL_ROUND_WIDTH, 80));
+  GSize bitmapSize = gbitmap_get_bounds(bitmapWall).size;
+
+  graphics_draw_bitmap_in_rect(ctx, bitmapWall, GRect(-((bitmapSize.w - bounds.size.w)/2), 88, bitmapSize.w, bitmapSize.h));
 
   // Player and enemy
   graphics_context_set_compositing_mode(ctx, GCompOpSet);
   character_render(player, ctx);
-  character_status(player, ctx, fontHealth, bitmapHealth, (enemy == NULL ? GTextAlignmentCenter : GTextAlignmentLeft));
+  character_status(player, ctx, fontHealth, bitmapHealth);
 
   if( enemy != NULL ) {
     character_render(enemy, ctx);
-    character_status(enemy, ctx, fontHealth, bitmapHealth, GTextAlignmentRight);
+    character_status(enemy, ctx, fontHealth, bitmapHealth);
   }
 
   // Time Background
@@ -73,6 +78,7 @@ static void window_load(Window *window) {
   bitmapHealth = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_HEALTH);
   bitmapBackgroundTime = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND_TIME);
   bitmapBattery = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BATTERY);
+  bitmapBlood = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BLOOD);
 
   fontHealth = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FIVEPFIVE_20));
   fontTime = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_FIVEPFIVE_48));
@@ -93,10 +99,11 @@ static void window_load(Window *window) {
 
   layer_add_child(layerWindow, text_layer_get_layer(layerTime));
 
-  player = character_create(bitmapGoblin, GPoint(PBL_IF_ROUND_ELSE(34,16), 120));
+  player = character_create(bitmapPlayer);
   character_set_position(player, bounds, GTextAlignmentLeft);
-  // player = character_create(bitmapPlayer);
-  // enemy = character_create(bitmapGoblin, GPoint(PBL_IF_ROUND_ELSE(88,88), 123));
+
+  enemy = character_create(bitmapGoblin);
+  character_set_position(enemy, bounds, GTextAlignmentRight);
 }
 
 static void window_unload(Window *window) {
@@ -108,6 +115,7 @@ static void window_unload(Window *window) {
   gbitmap_destroy(bitmapHealth);
   gbitmap_destroy(bitmapBackgroundTime);
   gbitmap_destroy(bitmapBattery);
+  gbitmap_destroy(bitmapBlood);
 
   text_layer_destroy(layerTime);
   fonts_unload_custom_font(fontTime);
@@ -131,8 +139,11 @@ static void init(void) {
   // Show the time at the start
   update_time();
 
+  update_game();
+
   // Register with TickTimerService
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+  // tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 }
 
 static void deinit(void) {
