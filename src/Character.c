@@ -4,11 +4,17 @@ Character* character_create(GBitmap *bitmap) {
   Character *c = malloc(sizeof(Character));
   c->bitmap = bitmap;
   c->health = 15;
+  c->damageTaken = 0;
   return c;
 }
 
 void character_destroy(Character *c) {
   free(c);
+}
+
+void character_blood(Character *c, GContext *ctx, GBitmap *bitmap) {
+  GSize size = gbitmap_get_bounds(bitmap).size;
+  graphics_draw_bitmap_in_rect(ctx, bitmap, GRect(c->position.x, c->position.y, size.w, size.h));
 }
 
 void character_render(Character *c, GContext *ctx) {
