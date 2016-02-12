@@ -1,3 +1,5 @@
+#define TIMER_DELAY 40
+
 #include <pebble.h>
 
 #include "RogueLite.h"
@@ -26,7 +28,9 @@ static GameState state;
 
 static GRect screenDimension;
 
-static void update_game() {
+AppTimer *timer;
+
+void blit() {
   switch( state ) {
     case waiting:
       break;
@@ -41,21 +45,23 @@ static void update_game() {
       }
       break;
     case player_turn:
-      if( player->health <= 0 ) {
-        state = waiting;
-      } else {
-        if( rand() % 10 >= 2 ) {
-          enemy->damageTaken = 1;
-          enemy->health -= enemy->damageTaken;
-          if( enemy->health <= 0 ) {
-            enemy->health = 0;
-          }
-          layer_mark_dirty(layerBackground);
-          state = (enemy_turn);
-        } else {
-          state = enemy_turn;
-        }
-      }
+    player->position.x += 2;
+    layer_mark_dirty(layerBackground);
+      // if( player->health <= 0 ) {
+      //   state = waiting;
+      // } else {
+      //   if( rand() % 10 >= 2 ) {
+      //     enemy->damageTaken = 1;
+      //     enemy->health -= enemy->damageTaken;
+      //     if( enemy->health <= 0 ) {
+      //       enemy->health = 0;
+      //     }
+      //     layer_mark_dirty(layerBackground);
+      //     state = (enemy_turn);
+      //   } else {
+      //     state = enemy_turn;
+      //   }
+      // }
       break;
     case enemy_turn:
       if( enemy->health <= 0 ) {
@@ -77,6 +83,8 @@ static void update_game() {
       }
       break;
   }
+
+  timer = app_timer_register(TIMER_DELAY, (AppTimerCallback)blit, NULL);
 }
 
 static void update_time() {
@@ -91,7 +99,6 @@ static void update_time() {
 
 static void tick_handler(struct tm *tick_time, TimeUnits unit_changed) {
   update_time();
-  update_game();
 }
 
 static void layer_update_proc(Layer *layer, GContext *ctx) {
@@ -206,12 +213,17 @@ static void init(void) {
   // update_game();
 
   // Register with TickTimerService
-  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
-  // tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  // tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+
+  // timer = app_timer_register(TIMER_DELAY, (AppTimerCallback)blit, NULL);
+  blit();
 }
 
 static void deinit(void) {
   window_destroy(window);
+
+  app_timer_cancel(timer);
 }
 
 int main(void) {

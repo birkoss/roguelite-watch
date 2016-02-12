@@ -3,7 +3,7 @@
 Character* character_create(GBitmap *bitmap) {
   Character *c = malloc(sizeof(Character));
   c->bitmap = bitmap;
-  c->health = 15;
+  c->health = 5;
   c->damageTaken = 0;
   return c;
 }

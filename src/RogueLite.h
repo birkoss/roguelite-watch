@@ -3,4 +3,10 @@ typedef enum GameState {
   wondering,
   player_turn,
   enemy_turn
+  // GameStateWandering,
+  // GameStateCharacterAdvance,
+  // GameStateCharacterAttack,
+  // GameStateCharacterResult,
+  // GameStateCharacterRetreat,
+  // GameStateCharacterDead
 } GameState;
