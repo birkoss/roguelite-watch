@@ -13,8 +13,9 @@ void character_destroy(Character *c) {
 }
 
 void character_blood(Character *c, GContext *ctx, GBitmap *bitmap) {
+  GSize sizeBitmap = gbitmap_get_bounds(c->bitmap).size;
   GSize size = gbitmap_get_bounds(bitmap).size;
-  graphics_draw_bitmap_in_rect(ctx, bitmap, GRect(c->position.x, c->position.y, size.w, size.h));
+  graphics_draw_bitmap_in_rect(ctx, bitmap, GRect(c->position.x + (sizeBitmap.w/2) - (size.w/2), c->position.y, size.w, size.h));
 }
 
 void character_render(Character *c, GContext *ctx) {
