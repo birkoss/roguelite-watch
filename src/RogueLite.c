@@ -1,4 +1,4 @@
-#define TIMER_DELAY 40
+#define TIMER_DELAY 1000
 
 #include <pebble.h>
 
@@ -25,28 +25,58 @@ static Character *player;
 static Character *enemy;
 
 static GameState state;
+static int attackingTurn = 0;
 
 static GRect screenDimension;
 
 AppTimer *timer;
 
 void blit() {
+  Character *attacker;
+  Character *defender;
+  GSize bitmapSize;
+  if( attackingTurn == 0 ) {
+    attacker = player;
+    defender = enemy;
+  } else {
+    attacker = enemy;
+    defender = player;
+  }
+
   switch( state ) {
-    case waiting:
+    case GameStateWaiting:
       break;
-    case wondering:
+    case GameStateWandering:
       if( rand() % 10 < 5 ) {
         character_set_position(player, screenDimension, GTextAlignmentLeft);
 
         enemy = character_create(bitmapGoblin);
         character_set_position(enemy, screenDimension, GTextAlignmentRight);
 
-        state = player_turn;
+        state = GameStateAttacking;
       }
       break;
-    case player_turn:
-    player->position.x += 2;
-    layer_mark_dirty(layerBackground);
+    case GameStateAttacking:
+      bitmapSize = gbitmap_get_bounds(attacker->bitmap).size;
+
+      attacker->position = defender->position;
+
+      if( rand() % 10 >= 2 ) {
+        defender->damageTaken = 1;
+        defender->health -= defender->damageTaken;
+        if( defender->health <= 0 ) {
+          defender->health = 0;
+        }
+
+        attacker->position.x += ((bitmapSize.w/2) * (attacker == player ? -1 : 1));
+      } else {
+        attacker->position.x += ((bitmapSize.w/2) * (attacker == player ? -1 : 1));
+        defender->position.x += ((bitmapSize.w/2) * (attacker == player ? 1 : -1));
+      }
+
+      layer_mark_dirty(layerBackground);
+
+      state = GameStateRetreating;
       // if( player->health <= 0 ) {
       //   state = waiting;
       // } else {
@@ -63,11 +93,11 @@ void blit() {
       //   }
       // }
       break;
-    case enemy_turn:
+    case GameStateHitting:
       if( enemy->health <= 0 ) {
         enemy = NULL;
         character_set_position(player, screenDimension, GTextAlignmentCenter);
-        state = wondering;
+        state = GameStateWandering;
       } else {
         if( rand() % 10 >= 2 ) {
           player->damageTaken = 1;
@@ -76,11 +106,24 @@ void blit() {
             player->health = 0;
           }
           layer_mark_dirty(layerBackground);
-          state = player_turn;
+          // state = player_turn;
         } else {
-          state = player_turn;
+          // state = player_turn;
         }
       }
+      break;
+    case GameStateMissing:
+      break;
+    case GameStateRetreating:
+      attacker->position = attacker->positionOriginal;
+      defender->position = defender->positionOriginal;
+      layer_mark_dirty(layerBackground);
+
+      attackingTurn ^= 1;
+
+      state = GameStateAttacking;
+      break;
+    case GameStateDying:
       break;
   }
 
@@ -205,7 +248,7 @@ static void init(void) {
 
   window_stack_push(window, true);
 
-  state = wondering;
+  state = GameStateWandering;
 
   // Show the time at the start
   update_time();

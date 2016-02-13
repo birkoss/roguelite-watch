@@ -9,6 +9,7 @@ typedef struct {
 typedef struct {
   GBitmap *bitmap;
   GPoint position;
+  GPoint positionOriginal;
   int health;
   CharacterStatus status;
   int damageTaken;

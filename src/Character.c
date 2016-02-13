@@ -51,9 +51,7 @@ void character_set_position(Character *c, GRect bounds, GTextAlignment alignment
   }
 
   c->position = position;
-
-
-  // Set the status position
+  c->positionOriginal = position;
 }
 
 void character_status(Character *c, GContext *ctx, GFont font, GBitmap *bitmap) {
